@@ -4,10 +4,10 @@ module ActionForm
 
     def submit(params)
       params.each do |key, value|
-        if nested_params?(value)
+        if nested_params?(key)
           fill_association_with_attributes(key, value)
         else
-          send("#{key}=", value)
+          send("#{key}=", value) if respond_to?("#{key}=")
         end
       end
     end
@@ -15,15 +15,15 @@ module ActionForm
     def valid?
       super
       model.valid?
-      
+
       collect_errors_from(model)
       aggregate_form_errors
 
       errors.empty?
     end
 
-    def nested_params?(value)
-      value.is_a?(Hash)
+    def nested_params?(key)
+      ATTRIBUTES_KEY_REGEXP.match(key).present?
     end
 
     def find_association_name_in(key)

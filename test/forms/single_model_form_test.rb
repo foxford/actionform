@@ -33,6 +33,19 @@ class SingleModelFormTest < ActiveSupport::TestCase
     assert_equal 0, @user.gender
   end
 
+  test 'does not accept not declared attributes' do
+    assert_nothing_raised do
+      @form.submit({ name: 'Peter', some_param: 'some_value' })
+    end
+  end
+
+  test 'does not recognize hash attribute as nested attributes' do
+    hash_value = { first_name: 'James', last_name: 'Bond' }
+    @form.submit(name: hash_value)
+
+    assert_equal hash_value, @user.name
+  end
+
   test "validates itself" do
     @form.name = nil
     @form.age = nil
@@ -141,7 +154,7 @@ class SingleModelFormTest < ActiveSupport::TestCase
   test "responds to #persisted?" do
     assert_respond_to @form, :persisted?
     assert_not @form.persisted?
-    
+
     assert save_user
     assert @form.persisted?
   end
@@ -149,7 +162,7 @@ class SingleModelFormTest < ActiveSupport::TestCase
   test "responds to #to_key" do
     assert_respond_to @form, :to_key
     assert_nil @form.to_key
-    
+
     assert save_user
     assert_equal @user.to_key, @form.to_key
   end
@@ -157,7 +170,7 @@ class SingleModelFormTest < ActiveSupport::TestCase
   test "responds to #to_param" do
     assert_respond_to @form, :to_param
     assert_nil @form.to_param
-    
+
     assert save_user
     assert_equal @user.to_param, @form.to_param
   end
