@@ -7,7 +7,7 @@ module ActionForm
     define_model_callbacks :save, only: [:after]
     after_save :update_form_models
 
-    delegate :persisted?, :to_model, :to_key, :to_param, :to_partial_path, to: :model
+    delegate :persisted?, :model_name, :to_key, :to_param, :to_partial_path, to: :model
     attr_reader :model, :forms
 
     def initialize(model)
@@ -15,7 +15,11 @@ module ActionForm
       @forms = []
       populate_forms
     end
-    
+
+    def to_model
+      self
+    end
+
     def get_model(assoc_name)
       form = find_form_by_assoc_name(assoc_name)
       form.get_model(assoc_name)
