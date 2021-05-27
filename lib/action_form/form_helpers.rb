@@ -49,14 +49,14 @@ module ActionForm
     end
 
     def collect_errors_from(validatable_object)
-      validatable_object.errors.each do |attribute, error|
+      validatable_object.errors.each do |error|
         key = if validatable_object.respond_to?(:association_name)
-          "#{validatable_object.association_name}.#{attribute}"
+          "#{validatable_object.association_name}.#{error.attribute}"
         else
-          attribute
+          error.attribute
         end
 
-        errors.add(key, error)
+        errors.add(key, error.message)
       end
     end
   end
