@@ -2,7 +2,7 @@ require 'test_helper'
 
 class ProjectsControllerTest < ActionController::TestCase
   fixtures :projects
-  
+
   setup do
     @project = projects(:yard)
   end
@@ -10,7 +10,6 @@ class ProjectsControllerTest < ActionController::TestCase
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:projects)
   end
 
   test "should get new" do
@@ -20,30 +19,34 @@ class ProjectsControllerTest < ActionController::TestCase
 
   test "should create project" do
     assert_difference('Project.count') do
-      post :create, project: { description: @project.description, name: @project.name }
+      post :create, params: { project: { description: @project.description, name: @project.name } }
     end
 
-    assert_redirected_to project_path(assigns(:project))
+    assert_redirected_to project_path(Project.last)
   end
 
   test "should show project" do
-    get :show, id: @project
+    get :show, params: { id: @project }
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @project
+    get :edit, params: { id: @project }
     assert_response :success
   end
 
   test "should update project" do
-    patch :update, id: @project, project: { description: @project.description, name: @project.name }
-    assert_redirected_to project_path(assigns(:project))
+    patch :update, params: { id: @project, project: { name: "new name" } }
+
+    @project.reload
+    assert_equal "new name", @project.name
+
+    assert_redirected_to project_path(@project)
   end
 
   test "should destroy project" do
     assert_difference('Project.count', -1) do
-      delete :destroy, id: @project
+      delete :destroy, params: { id: @project }
     end
 
     assert_redirected_to projects_path

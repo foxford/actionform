@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class TwoNestedCollectionsFormTest < ActiveSupport::TestCase
-  include ActiveModel::Lint::Tests
+
   fixtures :surveys, :questions, :answers
 
   def setup

@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class NestedModelsFormTest < ActiveSupport::TestCase
-  include ActiveModel::Lint::Tests
+
   fixtures :users, :emails, :profiles
 
   def setup

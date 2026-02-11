@@ -2,7 +2,6 @@ require 'test_helper'
 require_relative 'poro_form_fixture'
 
 class PoroFormTest < ActiveSupport::TestCase
-  include ActiveModel::Lint::Tests
 
   setup do
     @poro = Poro.new

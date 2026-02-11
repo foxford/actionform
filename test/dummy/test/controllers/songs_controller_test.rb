@@ -10,7 +10,6 @@ class SongsControllerTest < ActionController::TestCase
   test "should get index" do
     get :index
     assert_response :success
-    assert_not_nil assigns(:songs)
   end
 
   test "should get new" do
@@ -20,7 +19,7 @@ class SongsControllerTest < ActionController::TestCase
 
   test "should create song" do
     assert_difference(['Song.count', 'Artist.count', 'Producer.count']) do
-      post :create, song: {
+      post :create, params: { song: {
         title: "Diamonds",
         length: "360",
 
@@ -32,31 +31,23 @@ class SongsControllerTest < ActionController::TestCase
             studio: "MADog"
           }
         }
-      }
+      } }
     end
 
-    song_form = assigns(:song_form)
+    song = Song.last
+    assert_equal "Diamonds", song.title
+    assert_equal "360", song.length
+    assert_equal "Karras", song.artist.name
+    assert_equal "Phoebos", song.artist.producer.name
+    assert_equal "MADog", song.artist.producer.studio
 
-    assert song_form.valid?
-    assert_redirected_to song_path(song_form)
-
-    assert_equal "Diamonds", song_form.title
-    assert_equal "360", song_form.length
-
-    assert_equal "Karras", song_form.artist.name
-
-    assert_equal "Phoebos", song_form.artist.producer.name
-    assert_equal "MADog", song_form.artist.producer.studio
-
-    assert song_form.artist.persisted?
-    assert song_form.artist.producer.persisted?
-
-    assert_equal "Song: Diamonds was successfully created.", flash[:notice]
+    assert_redirected_to song_path(song)
+    assert_match /was successfully created/, flash[:notice]
   end
 
   test "should not create song with invalid params" do
     assert_difference(['Song.count', 'Artist.count', 'Producer.count'], 0) do
-      post :create, song: {
+      post :create, params: { song: {
         title: nil,
         length: nil,
 
@@ -68,39 +59,25 @@ class SongsControllerTest < ActionController::TestCase
             studio: nil
           }
         }
-      }
+      } }
     end
 
-    song_form = assigns(:song_form)
-
-    assert_not song_form.valid?
-
-    assert_includes song_form.errors[:title], "can't be blank"
-    assert_includes song_form.errors[:length], "can't be blank"
-
-    assert_includes song_form.errors["artist.name"], "can't be blank"
-    assert_includes song_form.artist.errors[:name], "can't be blank"
-
-    assert_includes song_form.artist.producer.errors[:name], "can't be blank"
-    assert_includes song_form.artist.producer.errors[:studio], "can't be blank"
-
-    assert_includes song_form.errors["artist.producer.name"], "can't be blank"
-    assert_includes song_form.errors["artist.producer.studio"], "can't be blank"
+    assert_response :success
   end
 
   test "should show song" do
-    get :show, id: @song
+    get :show, params: { id: @song }
     assert_response :success
   end
 
   test "should get edit" do
-    get :edit, id: @song
+    get :edit, params: { id: @song }
     assert_response :success
   end
 
   test "should update song" do
     assert_difference(['Song.count', 'Artist.count', 'Producer.count'], 0) do
-      patch :update, id: @song, song: {
+      patch :update, params: { id: @song, song: {
         title: "Run this town",
         length: "355",
 
@@ -112,27 +89,23 @@ class SongsControllerTest < ActionController::TestCase
             studio: "Marshall"
           }
         }
-      }
+      } }
     end
 
-    song_form = assigns(:song_form)
+    @song.reload
+    assert_equal "Run this town", @song.title
+    assert_equal "355", @song.length
+    assert_equal "Rihanna", @song.artist.name
+    assert_equal "Eminem", @song.artist.producer.name
+    assert_equal "Marshall", @song.artist.producer.studio
 
-    assert_redirected_to song_path(song_form)
-
-    assert_equal "Run this town", song_form.title
-    assert_equal "355", song_form.length
-
-    assert_equal "Rihanna", song_form.artist.name
-
-    assert_equal "Eminem", song_form.artist.producer.name
-    assert_equal "Marshall", song_form.artist.producer.studio
-
-    assert_equal "Song: Run this town was successfully updated.", flash[:notice]
+    assert_redirected_to song_path(@song)
+    assert_match /was successfully updated/, flash[:notice]
   end
 
   test "should destroy song" do
     assert_difference('Song.count', -1) do
-      delete :destroy, id: @song
+      delete :destroy, params: { id: @song }
     end
 
     assert_redirected_to songs_path

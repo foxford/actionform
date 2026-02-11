@@ -45,7 +45,7 @@ module ActionForm
 
       new_object = create_object(f, association)
 
-      html_options[:'data-association-insertion-template'] = CGI.escapeHTML(render_association(association, f, new_object, render_options, override_partial).to_str).html_safe
+      html_options[:'data-association-insertion-template'] = ERB::Util.html_escape(render_association(association, f, new_object, render_options, override_partial).to_str).html_safe
         
       link_to(name, '#', html_options)
     end

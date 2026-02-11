@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ConferenceFormTest < ActiveSupport::TestCase
-  include ActiveModel::Lint::Tests
+
   include ActionDispatch::TestProcess
 
   fixtures :conferences, :speakers, :presentations

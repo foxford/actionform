@@ -19,6 +19,7 @@ module ActionForm
     end
 
     def submit(params)
+      params = params.to_unsafe_h if params.respond_to?(:to_unsafe_h)
       params.each do |key, value|
         if parent.persisted?
           create_or_update_record(value)
