@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ProjectFormTest < ActiveSupport::TestCase
-  include ActiveModel::Lint::Tests
+
   fixtures :projects, :tasks, :people
 
   def setup

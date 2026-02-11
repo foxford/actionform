@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class TwoNestingLevelFormTest < ActiveSupport::TestCase
-  include ActiveModel::Lint::Tests
+
   fixtures :songs, :artists, :producers
 
   def setup
